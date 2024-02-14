@@ -12,6 +12,7 @@ import Home from "./Components/Common/Home";
 import Books from "./Components/Books/Books";
 
 import { UserProvider } from "./UserContext"; // import user context
+import AddBook from "./Components/Books/AddBook";
 
 axios.defaults.baseURL = "http://localhost:3000"; // backend base URL
 
@@ -38,6 +39,14 @@ const router = createBrowserRouter([
         element: (
           <UserRouteGuard>
             <Books />
+          </UserRouteGuard>
+        ),
+      },
+      {
+        path: "/dashboard/add-book",
+        element: (
+          <UserRouteGuard>
+            <AddBook />
           </UserRouteGuard>
         ),
       },
