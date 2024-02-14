@@ -18,6 +18,12 @@ export const UserSchema = new mongoose.Schema({
   },
   firstName: { type: String },
   address: { type: String },
+  role: {
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user',
+    required: true,
+  },
   createData: { type: Date, default: Date.now },
 });
 

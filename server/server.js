@@ -2,7 +2,8 @@ import express from 'express';
 import cors from "cors";
 
 import connect from "./database/connection.js";
-import auth from './routes/auth.js'; // import auth route;
+import auth from './routes/auth.js'; // import auth route
+import book from './routes/book.js'; // import book route
 
 
 
@@ -14,6 +15,8 @@ app.use(cors());
 const PORT = 3000 || process.env.PORT; // create local build port or get prod build port
 
 app.use('/auth', auth); // create auth route
+app.use('/store', book); // create book route
+app.use('/upload', express.static('upload')); // image upload path
 
 
 
