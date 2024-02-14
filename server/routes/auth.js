@@ -4,6 +4,7 @@ import userController from './../controllers/authController.js'; // import user 
 const route = express.Router();
 
 route.post('/register', userController.registerUser); // register route
+route.post('/login', userController.loginUser); // register route
 
 
 
