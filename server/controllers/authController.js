@@ -28,13 +28,13 @@ const registerUser = async (req, res) => {
     // check username already exist
     const existingUser = await userNameExist(userName);
     if (existingUser) {
-      return res.status(409).send({ error: "User is already exists." });
+      return res.status(401).send({ error: "User is already exists." });
     }
 
     // check email already exist
     const existingEmail = await emailExist(email);
     if (existingEmail) {
-      return res.status(409).send({ error: "Email is already in use." });
+      return res.status(401).send({ error: "Email is already use." });
     }
 
     const hashedPassword = await hashPassword(password); // hash password
