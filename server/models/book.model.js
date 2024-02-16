@@ -27,9 +27,16 @@ export const BookSchema = new mongoose.Schema({
   },
 });
 
-BookSchema.pre('save', function (next) {
+// auto add date when user save new book
+BookSchema.pre("save", function (next) {
   this.lastModifiedDate = Date.now();
   next();
 });
 
-export default mongoose.model('Book', BookSchema);
+// auto update date when user update book data
+BookSchema.pre("updateOne", function (next) {
+  this._update.lastModifiedDate = new Date();
+  next();
+});
+
+export default mongoose.model("Book", BookSchema);
