@@ -3,15 +3,14 @@ import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../../UserContext";
+import convertBase64 from './../../utils/convertBase64.js'
 
 const AddBook = () => {
   const navigate = useNavigate();
-  const { updateUser } = useUser();
   const [file, setFile] = useState(null);
+  const [imgUrl, setImgUrl] = useState(null);
 
   // Validation schema
   const validationSchema = Yup.object({
@@ -42,8 +41,20 @@ const AddBook = () => {
   });
 
   // Image upload
-  const uploadImage = (event) => {
-    setFile(event.target.files[0]);
+  const uploadImage = async (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    if (selectedFile) {
+      try {
+        const img = await convertBase64(selectedFile);
+        setImgUrl(img);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      setImgUrl(null);
+    }
   };
 
   // Add book function
@@ -156,34 +167,40 @@ const AddBook = () => {
                   )}
                 </div>
               </div>
-
-              <div className="flex justify-end items-center">
-                <div className="flex items-center w-[60px]">
-                  <label htmlFor="add-image" className="">
-                    <svg
+              {/* image */}
+              <div className="flex justify-end">
+                <div className="image">
+                <label htmlFor="add-image" className="">
+                    {!imgUrl && (<svg
                       xmlns="http://www.w3.org/2000/svg"
-                      height="35px"
+                      height="50px"
                       viewBox="0 0 24 24"
-                      width="35px"
+                      width="50px"
                       fill="indigo"
                     >
                       <path d="M0 0h24v24H0V0z" fill="none" />
                       <path d="M18 20H4V6h9V4H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-9h-2v9zm-7.79-3.17l-1.96-2.36L5.5 18h11l-3.54-4.71zM20 4V1h-2v3h-3c.01.01 0 2 0 2h3v2.99c.01.01 2 0 2 0V6h3V4h-3z" />
-                    </svg>
-                  </label>
-                  <input
+                    </svg>)}
+                    {imgUrl && (<img className="w-[185px] h-[150px]" src={imgUrl}  alt="" />)}
+                    
+                    <input
                     type="file"
                     id="add-image"
-                    className="invisible"
+                    className="invisible hidden"
                     onChange={uploadImage}
                   />
+                  </label>
                 </div>
-                <button
-                  className="p-2 w-2/6 bg-indigo-800 rounded-[5px] hover:bg-indigo-500 transition-colors duration-300"
-                  type="submit"
-                >
-                  Add
-                </button>
+                <div className="btn ml-2">
+                    <div className="btn-row flex flex-col justify-end h-full">
+                    <button
+                      className="p-2 mt-2 w-24 h-[40px] bg-indigo-800 rounded-[5px] hover:bg-indigo-500 transition-colors duration-300"
+                      type="submit"
+                    >
+                      Add
+                    </button>
+                    </div>
+                </div>
               </div>
             </div>
           </form>
