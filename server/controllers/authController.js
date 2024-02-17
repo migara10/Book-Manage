@@ -28,13 +28,13 @@ const registerUser = async (req, res) => {
     // check username already exist
     const existingUser = await userNameExist(userName);
     if (existingUser) {
-      return res.status(401).send({ error: "User is already exists." });
+      return res.status(401).send({ message: "User is already exists." });
     }
 
     // check email already exist
     const existingEmail = await emailExist(email);
     if (existingEmail) {
-      return res.status(401).send({ error: "Email is already use." });
+      return res.status(401).send({ message: "Email is already use." });
     }
 
     const hashedPassword = await hashPassword(password); // hash password
@@ -53,8 +53,7 @@ const registerUser = async (req, res) => {
 
     return res.status(200).send({ message: "User registered successfully." });
   } catch (error) {
-    console.error("Internal Server Error:", error);
-    return res.status(500).send({ error: "Internal Server Error" });
+    return res.status(500).send({ message: "Internal Server Error" });
   }
 };
 
@@ -80,7 +79,7 @@ const loginUser = async (req, res) => {
     const user = await userNameExist(userName);
 
     if (!user) {
-      return res.status(400).send({ error: "Valid User Not Found." });
+      return res.status(400).send({ message: "Valid User Not Found." });
     }
 
     // Compare password
@@ -88,16 +87,13 @@ const loginUser = async (req, res) => {
 
     if (isMatch) {
       const token = generateToken(user);
-      console.log("Password matches. User logged in.");
-      console.log("Generated Token:", token);
       const userWithoutPassword = { ...user.toObject(), password };
       return res.status(200).send({ message: "User login successfully.", token, user: userWithoutPassword, });
     } else {
-      return res.status(400).send({ error: "Invalid Password." });
+      return res.status(400).send({ message: "Invalid Password." });
     }
   } catch (error) {
-    console.error("Error during login:", error);
-    return res.status(500).send({ error: "Internal Server Error" });
+    return res.status(500).send({ message: "Internal Server Error" });
   }
 };
 

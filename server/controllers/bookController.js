@@ -32,15 +32,22 @@ const addNewBook = async (req, res) => {
 
 const getBooks = async (req, res) => {
   try {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 2; // Adjust the limit as needed
+    const page = req.query.page;
+    const limit = req.query.limit;
+    const searchQuery = req.query.search;
 
-    const totalBooks = await bookModel.countDocuments();
+    let query = {};
+    if (searchQuery) {
+      const searchRegex = new RegExp(searchQuery, "i");
+      query = { $or: [{ name: searchRegex }, { author: searchRegex }] };
+    }
+
+    const totalBooks = await bookModel.countDocuments(query); // return all books count
     const totalPages = Math.ceil(totalBooks / limit);
 
     const skip = (page - 1) * limit;
 
-    const books = await bookModel.find().skip(skip).limit(limit);
+    const books = await bookModel.find(query).skip(skip).limit(limit);
 
     res.status(200).json({ books, totalPages });
   } catch (error) {
@@ -49,22 +56,8 @@ const getBooks = async (req, res) => {
   }
 };
 
-
-
-/* const getBooks = async (req, res) => {
-  try {
-    const books = await bookModel.find();
-    res.status(200).json(books);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-}; */
-
-
 const updateBook = async (req, res) => {
   const bookId = req.params.id;
-
   const query = { _id: new mongoose.Types.ObjectId(bookId) };
 
   let updatedImagePath = req.body.img;
@@ -73,9 +66,21 @@ const updateBook = async (req, res) => {
   }
 
   try {
-    const updatedBook = {...req.body, img: updatedImagePath}
+    const updatedBook = { ...req.body, img: updatedImagePath };
     await bookModel.updateOne(query, updatedBook);
     return res.status(200).send({ message: "Book updated successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const deleteBookById = async (req, res) => {
+  try {
+    const bookId = req.params.id;
+    await bookModel.findByIdAndDelete(bookId);
+    console.log(`Book with ID ${bookId} deleted successfully.`);
+    res.status(200).send({ message: "Book deleted successfully." });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -87,4 +92,5 @@ export default {
   addNewBook,
   getBooks,
   updateBook,
+  deleteBookById,
 };
