@@ -1,6 +1,5 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import axios from "axios";
 import NavBar from "./NavBar";
 import SideBar from "./SideBar";
 
