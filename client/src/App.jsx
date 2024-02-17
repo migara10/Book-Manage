@@ -9,10 +9,10 @@ import Register from "./Components/Users/Register/Register";
 import Login from "./Components/Users/Login/Login";
 import Dashboard from "./Components/Common/DashBoard";
 import Home from "./Components/Common/Home";
-import DeleteBooks from "./Components/Books/DeleteBooks";
 
 import { UserProvider } from "./UserContext"; // import user context
 import AddBook from "./Components/Books/AddBook";
+import AdminRouteGuard from "./utils/AdminRouteGuard";
 
 AxiosInstance.defaults.baseURL = "http://localhost:3000"; // backend base URL
 
@@ -30,15 +30,17 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/dashboard/",
-        element: <UserRouteGuard>
-        <Home />
-      </UserRouteGuard>,
+        element: (
+          <UserRouteGuard>
+            <Home />
+          </UserRouteGuard>
+        ),
       },
       {
         path: "/dashboard/delete-books",
         element: (
           <UserRouteGuard>
-            <DeleteBooks />
+             <AdminRouteGuard />
           </UserRouteGuard>
         ),
       },

@@ -3,6 +3,7 @@ import axiosInstance from "./../../auth/axiosInstance.js";
 import EditBook from "./EditBook.jsx";
 import { useLocation } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import moment from 'moment';
 
 const BookPopup = ({ book, onClose }) => {
   const [editData, setEditData] = useState(false);
@@ -44,6 +45,7 @@ const BookPopup = ({ book, onClose }) => {
           )}
           <p className="text-sm font-semibold mb-2">Author: {book.author}</p>
           <p className="text-[0.8em] font-semibold mb-2">ISBN: {book.isbn}</p>
+          <p className="text-[0.8em] font-semibold mb-2">Update in: {moment(book.lastModifiedDate).format("MM/DD/YYYY")}</p>
           <div className="flex justify-end gap-3">
             {isDelete && (
               <button
