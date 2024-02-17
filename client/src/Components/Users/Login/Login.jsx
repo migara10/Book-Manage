@@ -95,7 +95,7 @@ const Login = () => {
                   <input
                     {...formik.getFieldProps("password")}
                     className="input-field rounded-[5px] px-2 py-2 border-2 border-indigo-600 w-72 outline-none sm:ml-3"
-                    type="text"
+                    type="password"
                     placeholder="Password"
                   />
                   {formik.touched.password && formik.errors.password ? (
