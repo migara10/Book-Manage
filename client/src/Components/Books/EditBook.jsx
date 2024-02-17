@@ -7,7 +7,7 @@ import axiosInstance from "./../../auth/axiosInstance.js";
 import { useNavigate } from "react-router-dom";
 import convertBase64 from './../../utils/convertBase64.js'
 
-const AddBook = () => {
+const AddBook = ({ book, onClose }) => {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [imgUrl, setImgUrl] = useState(null);
@@ -27,10 +27,10 @@ const AddBook = () => {
   // useFormik hook
   const formik = useFormik({
     initialValues: {
-      name: "Harry Potter 1",
-      author: "J.K. Rowling",
-      year: 1994,
-      isbn: "1851180080",
+      name: book.name,
+      author: book.author,
+      year: book.year,
+      isbn: book.isbn,
     },
     validationSchema,
     validateOnBlur: false,
@@ -62,16 +62,18 @@ const AddBook = () => {
     const formData = new FormData();
     formData.append("file", file);
 
-    // Append other form values to FormData
     Object.keys(bookData).forEach((key) => {
       formData.append(key, bookData[key]);
     });
+    if(!file) {
+        formData.append("img", book.img); // if user not change new image, pass old image url
+    }
     await axiosInstance
-      .post("/store/book", formData)
+      .put(`/store/book/${book._id}`, formData)
       .then((res) => {
         toast.success(res.data.message);
         setTimeout(() => {
-          navigate("/dashboard");
+            onClose() // trigger parent popup close
         }, 2000);
       })
       .catch((error) => {
@@ -80,26 +82,26 @@ const AddBook = () => {
   };
 
   return (
-    <div className="sm:flex-row sm:flex sm:items-start sm:justify-center sm:h-auto">
+    <div className="flex items-start justify-center h-auto">
       <Toaster position="top-center" reverseOrder={false} />
 
-      <div className="form-data flex justify-center sm:h-full items-center w-full sm:w-3/5">
+      <div className="form-data flex justify-center h-[400px] sm:h-full items-center w-3/5 sm:w-4/5">
         <div className="register h-full flex flex-col justify-center">
           <form
             className="p-6 bg-green-500 rounded-[10px]"
             onSubmit={formik.handleSubmit}
           >
             <div className="flex flex-col justify-start gap-3">
-              <h3 className="text-center text-lg font-bold">Add New Book</h3>
+              <h3 className="text-center text-lg font-bold">Edit Book</h3>
 
               {/* Book name */}
-              <div className="flex flex-col items-start sm:flex-row sm:justify-between sm:items-center">
-                <label htmlFor="book">Book Name</label>
+              <div className="flex flex-col sm:items-center sm:flex-row sm:justify-between items-start">
+                <label htmlFor="book">Book</label>
                 <div className="flex flex-col">
                   <input
                     {...formik.getFieldProps("name")}
                     id="name"
-                    className="input-field rounded-[5px] px-2 py-2 border-2 border-indigo-600 w-54 sm:w-72 outline-none sm:ml-3"
+                    className="input-field rounded-[5px] px-2 py-2 border-2 border-indigo-600 w-72 outline-none sm:ml-3"
                     type="text"
                     placeholder="Book Name*"
                   />
@@ -112,13 +114,13 @@ const AddBook = () => {
               </div>
 
               {/* Author name */}
-              <div className="flex flex-col items-start sm:flex-row sm:justify-between sm:items-center">
+              <div className="flex flex-col sm:items-center sm:flex-row sm:justify-between items-start">
                 <label htmlFor="author">Author</label>
                 <div className="flex flex-col">
                   <input
                     {...formik.getFieldProps("author")}
                     id="author"
-                    className="input-field rounded-[5px] px-2 py-2 border-2 border-indigo-600 w-54 sm:w-72 outline-none sm:ml-3"
+                    className="input-field rounded-[5px] px-2 py-2 border-2 border-indigo-600 w-72 outline-none sm:ml-3"
                     type="text"
                     placeholder="Author*"
                   />
@@ -131,13 +133,13 @@ const AddBook = () => {
               </div>
 
               {/* Year */}
-              <div className="flex flex-col items-start sm:flex-row sm:justify-between sm:items-center">
+              <div className="flex flex-col sm:items-center sm:flex-row sm:justify-between items-start">
                 <label htmlFor="year">Year</label>
                 <div className="flex flex-col">
                   <input
                     {...formik.getFieldProps("year")}
                     id="year"
-                    className="input-field rounded-[5px] px-2 py-2 border-2 border-indigo-600 w-54 sm:w-72 outline-none sm:ml-3"
+                    className="input-field rounded-[5px] px-2 py-2 border-2 border-indigo-600 w-72 outline-none sm:ml-3"
                     type="text"
                     placeholder="Year*"
                   />
@@ -150,13 +152,13 @@ const AddBook = () => {
               </div>
 
               {/* ISBN */}
-              <div className="flex flex-col items-start sm:flex-row sm:justify-between sm:items-center">
+              <div className="flex flex-col sm:items-center sm:flex-row sm:justify-between items-start">
                 <label htmlFor="isbn">ISBN</label>
                 <div className="flex flex-col">
                   <input
                     {...formik.getFieldProps("isbn")}
                     id="isbn"
-                    className="input-field rounded-[5px] px-2 py-2 border-2 border-indigo-600 w-54 sm:w-72 outline-none sm:ml-3"
+                    className="input-field rounded-[5px] px-2 py-2 border-2 border-indigo-600 w-72 outline-none sm:ml-3"
                     type="text"
                     placeholder="ISBN*"
                   />
@@ -167,20 +169,16 @@ const AddBook = () => {
                   )}
                 </div>
               </div>
+
               {/* image */}
               <div className="flex justify-end">
                 <div className="image">
                 <label htmlFor="add-image" className="">
-                    {!imgUrl && (<svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="50px"
-                      viewBox="0 0 24 24"
-                      width="50px"
-                      fill="indigo"
-                    >
-                      <path d="M0 0h24v24H0V0z" fill="none" />
-                      <path d="M18 20H4V6h9V4H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-9h-2v9zm-7.79-3.17l-1.96-2.36L5.5 18h11l-3.54-4.71zM20 4V1h-2v3h-3c.01.01 0 2 0 2h3v2.99c.01.01 2 0 2 0V6h3V4h-3z" />
-                    </svg>)}
+                    {!imgUrl && (<img
+                      className="w-[185px] h-[150px]"
+                      src={`${axiosInstance.defaults.baseURL}/${book.img}`}
+                      alt="Book Cover"
+                    />)}
                     {imgUrl && (<img className="w-[185px] h-[150px]" src={imgUrl}  alt="" />)}
                     
                     <input
@@ -194,10 +192,17 @@ const AddBook = () => {
                 <div className="btn ml-2">
                     <div className="btn-row flex flex-col justify-end h-full">
                     <button
-                      className="p-2 mt-2 w-24 h-[40px] text-white bg-indigo-800 rounded-[5px] hover:bg-indigo-500 transition-colors duration-300"
+                      className="p-2 w-24 text-white h-[40px] bg-red-600 rounded-[5px] hover:bg-red-400 transition-colors duration-300"
+                      type="submit"
+                      onClick={onClose}
+                    >
+                      Close
+                    </button>
+                    <button
+                      className="p-2 mt-2 w-24 text-white h-[40px] bg-indigo-800 rounded-[5px] hover:bg-indigo-500 transition-colors duration-300"
                       type="submit"
                     >
-                      Add
+                      Save
                     </button>
                     </div>
                 </div>
