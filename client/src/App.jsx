@@ -3,18 +3,18 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import axios from "axios";
+import AxiosInstance from "./auth/axiosInstance";
 import "./App.css";
 import Register from "./Components/Users/Register/Register";
 import Login from "./Components/Users/Login/Login";
 import Dashboard from "./Components/Common/DashBoard";
 import Home from "./Components/Common/Home";
-import Books from "./Components/Books/Books";
+import DeleteBooks from "./Components/Books/DeleteBooks";
 
 import { UserProvider } from "./UserContext"; // import user context
 import AddBook from "./Components/Books/AddBook";
 
-axios.defaults.baseURL = "http://localhost:3000"; // backend base URL
+AxiosInstance.defaults.baseURL = "http://localhost:3000"; // backend base URL
 
 const UserRouteGuard = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -35,10 +35,10 @@ const router = createBrowserRouter([
       </UserRouteGuard>,
       },
       {
-        path: "/dashboard/books",
+        path: "/dashboard/delete-books",
         element: (
           <UserRouteGuard>
-            <Books />
+            <DeleteBooks />
           </UserRouteGuard>
         ),
       },
