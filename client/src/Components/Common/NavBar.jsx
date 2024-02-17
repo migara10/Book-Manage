@@ -1,15 +1,8 @@
 import React from "react";
 import { useUser } from "./../../UserContext";
-import { useNavigate } from "react-router-dom";
 
 function NavBar() {
   const { user, logOutUser } = useUser();
-  const navigate = useNavigate();
-
-  const handleLogOut = () => {
-    logOutUser();
-    navigate("/login", { state: { user } });
-  };
 
   return (
     <nav className="w-[95/100] rounded-lg bg-stone-400">

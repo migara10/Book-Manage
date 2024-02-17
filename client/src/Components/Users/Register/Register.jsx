@@ -45,7 +45,7 @@ const Register = () => {
       .then((res) => {
         toast.success(res.data.message);
         setTimeout(() => {
-          navigate("/login");
+          navigate("/");
         }, 2000);
       })
       .catch((error) => {
@@ -145,7 +145,7 @@ const Register = () => {
                 </button>
                 <p>
                   Already Register?
-                  <Link to={"/login"} className="text-red-600">
+                  <Link to={"/"} className="text-red-600">
                     {" "}
                     Log In
                   </Link>
