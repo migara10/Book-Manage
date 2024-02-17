@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "./../../../auth/axiosInstance.js";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -38,21 +38,18 @@ const Register = () => {
     },
   });
 
-  console.log(formik.errors);
-
   // Register user function
   const registerUser = async (user) => {
-    await axios
+    await axiosInstance
       .post("auth/register", user)
       .then((res) => {
-        console.log(res);
         toast.success(res.data.message);
         setTimeout(() => {
           navigate("/login");
         }, 2000);
       })
       .catch((error) => {
-        toast.error(error.response.data.error);
+        toast.error(error.response.data.error || error.response.data.message);
       });
   };
 

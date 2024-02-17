@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 function SideBar() {
   const location = useLocation();
@@ -19,8 +19,9 @@ function SideBar() {
 
   return (
     <div>
-      <div className="h-full w-[80px] sm:w-[200px] bg-stone-600 rounded-lg">
+      <div className="h-full w-[60px] sm:w-[170px] bg-stone-600 rounded-lg">
         <ul className="flex flex-col items-center pt-[60px] w-full">
+          {/* home */}
           <li className="w-full">
             <Link
               to={"/dashboard"}
@@ -42,9 +43,11 @@ function SideBar() {
                   d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
                 />
               </svg>
-              <p className="p-0 m-0 hidden sm:flex text-white text-lg">Home</p>
+              <p className="p-0 m-0 hidden sm:flex text-white text-lg sm:ml-2">Home</p>
             </Link>
           </li>
+
+          {/* profile */}
           <li className="w-full">
             <Link
               to={"/dashboard/profile"}
@@ -69,41 +72,20 @@ function SideBar() {
                 />
               </svg>
 
-              <p className="p-0 m-0 hidden sm:flex text-white text-lg">
+              <p className="p-0 m-0 hidden sm:flex text-white text-lg sm:ml-2">
                 Profile
               </p>
             </Link>
           </li>
-          <li className="w-full">
-            <Link
-              to={"/dashboard/books"}
-              className={`flex items-center justify-right w-full p-2 gap-2e ${
-                location.pathname === "/dashboard/books" ? "bg-indigo-600" : ""
-              }`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="white"
-                className="w-[40px] h-[40px]"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"
-                />
-              </svg>
 
-              <p className="p-0 m-0 hidden sm:flex text-white text-lg">Book</p>
-            </Link>
-          </li>
+          {/* add book */}
           <li className="w-full">
             <Link
               to={"/dashboard/add-book"}
               className={`flex items-center justify-right w-full p-2 gap-2e ${
-                location.pathname === "/dashboard/add-book" ? "bg-indigo-600" : ""
+                location.pathname === "/dashboard/add-book"
+                  ? "bg-indigo-600"
+                  : ""
               }`}
             >
               <svg
@@ -121,9 +103,38 @@ function SideBar() {
                 />
               </svg>
 
-              <p className="p-0 m-0 hidden sm:flex text-white text-lg">Add</p>
+              <p className="p-0 m-0 hidden sm:flex text-white text-lg sm:ml-2">Add</p>
             </Link>
           </li>
+
+          {/* delete book */}
+          <li className="w-full">
+            <Link
+              to={"/dashboard/delete-books"}
+              className={`flex items-center justify-right w-full p-2 gap-2e ${
+                location.pathname === "/dashboard/delete-books" ? "bg-indigo-600" : ""
+              }`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="white"
+                className="w-[40px] h-[40px]"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                />
+              </svg>
+
+              <p className="p-0 m-0 hidden sm:flex text-white text-lg sm:ml-2">Delete</p>
+            </Link>
+          </li>
+
+          {/* log out */}
           <li className="w-full" onClick={handleLogout}>
             <Link
               to={"/dashboard/logout"}
@@ -146,7 +157,7 @@ function SideBar() {
                 />
               </svg>
 
-              <p className="p-0 m-0 hidden sm:flex text-white text-lg">
+              <p className="p-0 m-0 hidden sm:flex text-white text-lg sm:ml-2">
                 Logout
               </p>
             </Link>

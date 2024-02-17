@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import AxiosInstance from "./../../auth/axiosInstance.js";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
 import BookPopup from "./../Books/BookPopup.jsx";
+import Pagination from "./Pagination.jsx";
+import {DebounceInput} from 'react-debounce-input';
 
 function Home() {
   const [allBooks, setBooks] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
+ 
 
   useEffect(() => {
     getAllBooks(currentPage);
-  }, [currentPage]);
+  }, [currentPage, searchQuery]);
 
-  const getAllBooks = async (page) => {
+  const getAllBooks = async (pageNumber) => {
     try {
-      const response = await axios.get(`/store/book?page=${page}`);
+      const response = await AxiosInstance.get(
+        `/store/book?page=${pageNumber}&limit=3&search=${searchQuery}`
+      );
       setBooks(response.data.books);
       setTotalPages(response.data.totalPages);
     } catch (error) {
-      console.error(error);
       toast.error(error.response?.data?.error || "Error fetching books");
     }
   };
@@ -31,16 +37,34 @@ function Home() {
 
   const closeBookPopup = () => {
     setSelectedBook(null);
+    getAllBooks(1); // after edit reload get all books
   };
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
+  const handleSearchBooks = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1) /* when user go to 2nd or above page and search books
+    page number auto redirect to 1 */
+  };
+
   return (
     <div className="h-screen p-4 flex flex-col items-center">
       <Toaster position="top-center" reverseOrder={false} />
       <h2 className="text-2xl font-bold mb-4">All Books</h2>
+
+      {/* Search books */}
+      <DebounceInput
+          className="border p-2 mb-4 outline-none w-9/10 sm:w-1/2"
+          placeholder="Search books..."
+          minLength={2}
+          debounceTimeout={300}
+          value={searchQuery}
+          onChange={handleSearchBooks}
+      />
+
       {allBooks && (
         <ul className="flex flex-col items-center sm:flex-row sm:flex-wrap sm:gap-4 sm:justify-evenly">
           {allBooks.map((book) => (
@@ -49,39 +73,32 @@ function Home() {
               className="mb-4 flex flex-col items-center w-[250px] h-auto"
             >
               <div
-                className="image-card border-2 border-pink-500 cursor-pointer"
+                className="image-card cursor-pointer"
                 onClick={() => openBookPopup(book)}
               >
-                <p>{`${book.name}`}</p>
                 {book.img && (
                   <img
                     className="w-[250px] h-[320px] mt-2"
-                    src={`${axios.defaults.baseURL}/${book.img}`}
+                    src={`${AxiosInstance.defaults.baseURL}/${book.img}`}
                     alt="Book Cover"
                   />
                 )}
+                <p className="text-[1em] font-semibold">{`${book.name}`}</p>
+                <p className="text-[0.8em] font-semibold">{`${book.author}`}</p>
               </div>
             </li>
           ))}
         </ul>
       )}
-      {selectedBook && (
-        <BookPopup book={selectedBook} onClose={closeBookPopup} />
-      )}
-      <div className="pagination">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => handlePageChange(index + 1)}
-            className={`pagination-button ${
-              currentPage === index + 1 ? "bg-red-600 m-2 rounded-[50%] w-8 h-8" : "bg-red-300 m-2 rounded-[50%] w-8 h-8"
-            }`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
-      
+
+      {selectedBook && <BookPopup book={selectedBook} onClose={closeBookPopup} />}
+
+      {/* Render Pagination Component */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "./../../../auth/axiosInstance.js";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../UserContext";
 
@@ -34,11 +34,9 @@ const Login = () => {
     },
   });
 
-  console.log(formik.errors);
-
   // Register user function
   const loginUser = async (user) => {
-    await axios
+    await axiosInstance
       .post("auth/login", user)
       .then((res) => {
         const { token, message, user } = res.data;
@@ -50,12 +48,12 @@ const Login = () => {
         }, 2000);
       })
       .catch((error) => {
-        toast.error(error.response.data.error);
+        toast.error(error.response.data.error || error.response.data.message);
       });
   };
 
   return (
-    <div className="sm:flex-row sm:flex sm:items-center sm:justify-center sm:h-screen">
+    <div className="sm:flex-row sm:flex sm:items-center sm:justify-center sm:h-screen overflow-hidden">
       <Toaster position="top-center" reverseOrder={false} />
       <div className="title flex  justify-center items-center  w-full sm:w-2/5">
         <h2 className="text-[1.8em] my-6 text-center w-full sm:text-[2em] md:text-[3em]">
