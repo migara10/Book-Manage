@@ -3,6 +3,8 @@ import bcrypt from "bcrypt"; // import password encorder
 import config from "./../config.js";
 import jwt from "jsonwebtoken";
 
+let refreshTokens = [];
+
 const userNameExist = (userName) => {
   return userModel.findOne({ userName }).exec();
 };
@@ -66,14 +68,7 @@ const compareHashPassword = (password, hashPassword) => {
   });
 };
 
-const generateToken = (user) => {
-  const token = jwt.sign({ userId: user._id }, config.JWT_SECRET, {
-    expiresIn: "1h",
-  });
-  return token;
-};
-
-const loginUser = async (req, res) => {
+/* const loginUser = async (req, res) => {
   try {
     const { userName, password } = req.body;
     const user = await userNameExist(userName);
@@ -95,9 +90,69 @@ const loginUser = async (req, res) => {
   } catch (error) {
     return res.status(500).send({ message: "Internal Server Error" });
   }
+}; */
+
+const generateToken = (user, key, time) => {
+  const token = jwt.sign({ userId: user._id }, key, {
+    expiresIn: time,
+  });
+  return token;
+};
+
+const loginUser = async (req, res) => {
+  try {
+    const { userName, password } = req.body;
+    const user = await userNameExist(userName);
+
+    if (!user) {
+      return res.status(400).send({ message: "Valid User Not Found." });
+    }
+
+    // Compare password
+    const isMatch = await compareHashPassword(password, user.password);
+
+    if (isMatch) {
+      const accessToken = generateToken(user, config.ACCESS_KEY, "10s");
+      const refreshToken = generateToken(user, config.REFRESH_KEY, "20s");
+
+      refreshTokens.push(refreshToken);
+      const userWithoutPassword = { ...user.toObject(), password };
+      return res.status(200).send({
+        message: "User login successfully.",
+        accessToken,
+        refreshToken,
+        user: userWithoutPassword,
+      });
+    } else {
+      return res.status(400).send({ message: "Invalid Password." });
+    }
+  } catch (error) {
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+};
+
+const getToken = async (req, res) => {
+  try {
+    const refreshToken = req.body.refreshToken;
+
+    if (refreshToken == null) {
+      return res.status(401).send({ message: "Unauthorized" });
+    }
+    if (!refreshTokens.includes(refreshToken)) {
+      return res.status(403).send({ message: "Forbidden" }); // check refresh token already save in the server
+    }
+    jwt.verify(refreshToken, config.REFRESH_KEY, (err, user) => {
+      if (err) {
+        return res.status(403).send({ message: "Forbidden" });
+      }
+      const accessToken = generateToken(user, config.ACCESS_KEY, "10s");
+      return res.status(200).send({ accessToken });
+    });
+  } catch (error) {}
 };
 
 export default {
   registerUser,
   loginUser,
+  getToken,
 };
