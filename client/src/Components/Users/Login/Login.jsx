@@ -23,8 +23,8 @@ const Login = () => {
   // useFormik hook
   const formik = useFormik({
     initialValues: {
-      userName: "migara10",
-      password: "J@va1234",
+      userName: "",
+      password: "",
     },
     validationSchema,
     validateOnBlur: false,
@@ -34,7 +34,7 @@ const Login = () => {
     },
   });
 
-  // Register user function
+  // login user function
   const loginUser = async (user) => {
     await axiosInstance
       .post("auth/login", user)
@@ -97,7 +97,7 @@ const Login = () => {
                     {...formik.getFieldProps("password")}
                     className="input-field rounded-[5px] px-2 py-2 border-2 border-indigo-600 w-72 outline-none sm:ml-3"
                     type="password"
-                    placeholder="Password"
+                    placeholder="Password*"
                   />
                   {formik.touched.password && formik.errors.password ? (
                     <div className="text-red-600 font-semibold ml-3 my-1">

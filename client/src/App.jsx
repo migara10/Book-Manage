@@ -13,13 +13,14 @@ import Home from "./Components/Common/Home";
 import { UserProvider } from "./UserContext"; // import user context
 import AddBook from "./Components/Books/AddBook";
 import AdminRouteGuard from "./utils/AdminRouteGuard";
+import Profile from "./Components/Profile/Profile";
 
 AxiosInstance.defaults.baseURL = "http://localhost:3000"; // backend base URL
 
 const UserRouteGuard = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem("user"));
 
-  return currentUser ? children : <Navigate to="/login" />;
+  return currentUser ? children : <Navigate to="/" />;
 };
 
 // routers
@@ -49,6 +50,14 @@ const router = createBrowserRouter([
         element: (
           <UserRouteGuard>
             <AddBook />
+          </UserRouteGuard>
+        ),
+      },
+      {
+        path: "/dashboard/profile",
+        element: (
+          <UserRouteGuard>
+            <Profile />
           </UserRouteGuard>
         ),
       },

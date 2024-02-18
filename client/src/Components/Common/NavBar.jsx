@@ -2,7 +2,7 @@ import React from "react";
 import { useUser } from "./../../UserContext";
 
 function NavBar() {
-  const { user, logOutUser } = useUser();
+  const { user } = useUser();
 
   return (
     <nav className="w-[95/100] rounded-lg bg-stone-400">
@@ -16,7 +16,7 @@ function NavBar() {
         {user && (
           <div className="hidden items-end sm:flex sm:justify-between p-4">
             <p className="">Hello {user.firstName}</p>
-            <p className="">{user.role}</p>
+            <p className="">Role: {user.role}</p>
           </div>
         )}
         {!user && <p>Hello User</p>}

@@ -24,11 +24,11 @@ const Register = () => {
   // useFormik hook
   const formik = useFormik({
     initialValues: {
-      firstName: "migara",
-      userName: "migara10",
-      email: "migara@gmail.com",
-      password: "J@va1234",
-      role: "user",
+      firstName: "",
+      userName: "",
+      email: "",
+      password: "",
+      role: "",
     },
     validationSchema,
     validateOnBlur: false,
@@ -115,7 +115,7 @@ const Register = () => {
                     {...formik.getFieldProps("password")}
                     className="input-field rounded-[5px] px-2 py-2 border-2 border-indigo-600 w-72 outline-none sm:ml-3"
                     type="text"
-                    placeholder="Password"
+                    placeholder="Password*"
                   />
                   {formik.touched.password && formik.errors.password ? (
                     <div className="text-red-600 font-semibold ml-3 my-1">

@@ -68,30 +68,6 @@ const compareHashPassword = (password, hashPassword) => {
   });
 };
 
-/* const loginUser = async (req, res) => {
-  try {
-    const { userName, password } = req.body;
-    const user = await userNameExist(userName);
-
-    if (!user) {
-      return res.status(400).send({ message: "Valid User Not Found." });
-    }
-
-    // Compare password
-    const isMatch = await compareHashPassword(password, user.password);
-
-    if (isMatch) {
-      const token = generateToken(user);
-      const userWithoutPassword = { ...user.toObject(), password };
-      return res.status(200).send({ message: "User login successfully.", token, user: userWithoutPassword, });
-    } else {
-      return res.status(400).send({ message: "Invalid Password." });
-    }
-  } catch (error) {
-    return res.status(500).send({ message: "Internal Server Error" });
-  }
-}; */
-
 const generateToken = (user, key, time) => {
   const token = jwt.sign({ userId: user._id }, key, {
     expiresIn: time,
@@ -107,13 +83,12 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res.status(400).send({ message: "Valid User Not Found." });
     }
-
-    // Compare password
-    const isMatch = await compareHashPassword(password, user.password);
+    
+    const isMatch = await compareHashPassword(password, user.password); // Compare password
 
     if (isMatch) {
-      const accessToken = generateToken(user, config.ACCESS_KEY, "10s");
-      const refreshToken = generateToken(user, config.REFRESH_KEY, "20s");
+      const accessToken = generateToken(user, config.ACCESS_KEY, "10m");
+      const refreshToken = generateToken(user, config.REFRESH_KEY, "1h");
 
       refreshTokens.push(refreshToken);
       const userWithoutPassword = { ...user.toObject(), password };
@@ -145,14 +120,47 @@ const getToken = async (req, res) => {
       if (err) {
         return res.status(403).send({ message: "Forbidden" });
       }
-      const accessToken = generateToken(user, config.ACCESS_KEY, "10s");
+      const accessToken = generateToken(user, config.ACCESS_KEY, "10m");
       return res.status(200).send({ accessToken });
     });
   } catch (error) {}
 };
 
+
+const logOut = (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ message: "Refresh token is missing" });
+    }
+    refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+
+    return res.status(204).json({ message: "Logout Successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const getAllUsers = async (req, res) => {
+  try {
+    const result = await userModel.find({});
+
+    if (result.length === 0) {
+      return res.status(204).json({ message: "No users found" });
+    }
+
+    return res.status(200).json({ data: result });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
 export default {
   registerUser,
   loginUser,
   getToken,
+  logOut,
+  getAllUsers,
 };
+// rounded-[50%] bg-red-400 p-2 m-1

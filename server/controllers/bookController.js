@@ -11,7 +11,7 @@ const addNewBook = async (req, res) => {
     // check isbn already exist
     const existingBook = await checkISBNExist(isbn);
     if (existingBook) {
-      return res.status(401).send({ error: "Book is already saved." });
+      return res.status(400).send({ error: "Book is already saved." });
     }
 
     const book = new bookModel({
@@ -25,8 +25,7 @@ const addNewBook = async (req, res) => {
     await book.save();
     return res.status(200).send({ message: "Book added successfully." });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(400).json({ message: "Internal Server Error" });
   }
 };
 
@@ -51,7 +50,6 @@ const getBooks = async (req, res) => {
 
     res.status(200).json({ books, totalPages });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -70,7 +68,6 @@ const updateBook = async (req, res) => {
     await bookModel.updateOne(query, updatedBook);
     return res.status(200).send({ message: "Book updated successfully." });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -79,10 +76,8 @@ const deleteBookById = async (req, res) => {
   try {
     const bookId = req.params.id;
     await bookModel.findByIdAndDelete(bookId);
-    console.log(`Book with ID ${bookId} deleted successfully.`);
     res.status(200).send({ message: "Book deleted successfully." });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
