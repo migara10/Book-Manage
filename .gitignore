@@ -11,7 +11,6 @@ client/node_modules
 client/.env
 server/node_modules
 server/.env
-server/config.js
 client/dist
 dist-ssr
 *.local

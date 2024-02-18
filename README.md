@@ -24,10 +24,12 @@ open terminal and type,
  1. git clone https://github.com/migara10/Book-Manage
 
  ## run server
-  1. open Book-Manage in terminal
-  2. cd server
-  3. npm i --save
-  4. node server.js
+  1. copy ACCESS_KEY, REFRESH_KEY & DB_URI in config.js
+  
+  2. open Book-Manage in terminal
+  3. cd server
+  4. npm i --save
+  5. node server.js
   5. The server run on http://localhost:3000
 
  
