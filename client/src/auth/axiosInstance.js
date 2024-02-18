@@ -1,21 +1,11 @@
-// axiosInstance.js
 import axios from 'axios';
 
-const instance = axios.create({
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Add request interceptor
-instance.interceptors.request.use(
+const axiosInstance = axios.create();
+axiosInstance.interceptors.request.use(
   (config) => {
-    // Get the token from localStorage or wherever you store it
-    const token = localStorage.getItem('authToken');
-
-    // Set the Authorization header if a token is present
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
     return config;
@@ -24,5 +14,31 @@ instance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-export default instance;
+      try {
+        const response = await axiosInstance.post('/auth/token', {
+          refreshToken: localStorage.getItem('refreshToken'),
+        });
+        localStorage.setItem('accessToken', response.data.accessToken);
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        localStorage.clear();
+        window.location.href = '/';
+
+
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export default axiosInstance;

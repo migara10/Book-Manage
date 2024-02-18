@@ -39,8 +39,9 @@ const Login = () => {
     await axiosInstance
       .post("auth/login", user)
       .then((res) => {
-        const { token, message, user } = res.data;
-        localStorage.setItem("authToken", token);
+        const { accessToken, refreshToken, message, user } = res.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
         toast.success(message);
         setTimeout(() => {
           updateUser(user);
