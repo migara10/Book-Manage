@@ -1,13 +1,15 @@
 import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useUser } from "./../../UserContext";
 
 function SideBar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { logOutUser } = useUser();
 
   const handleLogout = () => {
+    logOutUser();
     navigate("/");
-    localStorage.clear();
   };
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -143,7 +145,6 @@ function SideBar() {
           {/* log out */}
           <li className="w-full" onClick={handleLogout}>
             <Link
-              to={"/dashboard/logout"}
               className={`flex items-center justify-right w-full p-2 gap-2e ${
                 location.pathname === "/dashboard/logout" ? "bg-indigo-600" : ""
               }`}

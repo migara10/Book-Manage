@@ -1,13 +1,12 @@
-import React from 'react';
-import Home from './../Common/Home.jsx'
+import React from "react";
+import Home from "./../Common/Home.jsx";
 
 function DeleteBooks() {
   return (
     <div>
-<Home />
-
+      <Home />
     </div>
-  )
+  );
 }
 
-export default DeleteBooks
+export default DeleteBooks;

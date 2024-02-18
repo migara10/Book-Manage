@@ -1,16 +1,13 @@
-// UserContext.js
-import { createContext, useContext, useEffect, useState } from 'react';
-
+import { createContext, useContext, useEffect, useState } from "react";
+import axiosInstance from "./auth/axiosInstance";
 
 const UserContext = createContext();
-
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Retrieve user data from localStorage on component mount
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -18,10 +15,23 @@ export const UserProvider = ({ children }) => {
 
   const updateUser = (newUser) => {
     setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser));
+    localStorage.setItem("user", JSON.stringify(newUser));
   };
-  const logOutUser = () => {
-    localStorage.removeItem('user');
+
+  const logOutUser = async () => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    try {
+      await axiosInstance
+        .delete("/auth/logout", { data: { refreshToken } })
+        .then((res) => {
+          localStorage.clear();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   return (

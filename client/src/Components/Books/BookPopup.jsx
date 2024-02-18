@@ -24,6 +24,7 @@ const BookPopup = ({ book, onClose }) => {
       .delete(`store/book/${id}`)
       .then((res) => {
         toast.success(res.data.message);
+        onClose();
       })
       .catch((error) => {
         toast.error(error.response.data.error || error.response.data.message);
