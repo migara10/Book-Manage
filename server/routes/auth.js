@@ -5,6 +5,7 @@ const route = express.Router();
 
 route.post('/register', userController.registerUser); // register route
 route.post('/login', userController.loginUser); // register route
+route.post('/token', userController.getToken); // get accessToken
 
 
 
