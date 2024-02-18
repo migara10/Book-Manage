@@ -26,7 +26,7 @@ function Profile() {
     <div className="flex flex-col md:flex-row">
       {user && (
         <div className="user md:w-[50%]">
-          <div className="from flex flex-col bg-zinc-400 p-3 m-3 rounded-[5px]">
+          <div className="from flex flex-col bg-zinc-400 p-3 m-2 rounded-[5px]">
             <h3 className="text-center text-indigo-800 font-semibold">
               User Details
             </h3>

@@ -45,6 +45,7 @@ const BookPopup = ({ book, onClose }) => {
             />
           )}
           <p className="text-sm font-semibold mb-2">Author: {book.author}</p>
+          <p className="text-[0.8em] font-semibold mb-2">Year: {book.year}</p>
           <p className="text-[0.8em] font-semibold mb-2">ISBN: {book.isbn}</p>
           <p className="text-[0.8em] font-semibold mb-2">Update in: {moment(book.lastModifiedDate).format("MM/DD/YYYY")}</p>
           <div className="flex justify-end gap-3">
