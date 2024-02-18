@@ -57,13 +57,13 @@ const Login = () => {
     <div className="sm:flex-row sm:flex sm:items-center sm:justify-center sm:h-screen overflow-hidden">
       <Toaster position="top-center" reverseOrder={false} />
       <div className="title flex  justify-center items-center  w-full sm:w-2/5">
-        <h2 className="text-[1.8em] my-6 text-center w-full sm:text-[2em] md:text-[3em]">
+        <h2 className="text-[2em] my-6 text-center w-full sm:text-[2.8em] md:text-[4em]  text-indigo-800">
           Book Store
         </h2>
       </div>
 
       <div className="form-data flex justify-center h-[400px] sm:h-full items-center w-full sm:w-3/5">
-        <div className="register h-full flex flex-col justify-center">
+        <div className="login h-auto flex flex-col justify-center">
           <form
             className="p-6 bg-green-500 rounded-[10px]"
             onSubmit={formik.handleSubmit}
@@ -109,7 +109,7 @@ const Login = () => {
 
               <div className="flex justify-between items-center">
                 <button
-                  className=" p-2 w-2/6 bg-indigo-800 rounded-[5px] hover:bg-indigo-500 transition-colors duration-300"
+                  className="text-white p-2 w-1/4 bg-indigo-800 rounded-[5px] hover:bg-indigo-500 transition-colors duration-300"
                   type="submit"
                 >
                   Log In

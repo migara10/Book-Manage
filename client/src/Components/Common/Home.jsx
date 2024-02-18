@@ -57,7 +57,7 @@ function Home() {
 
       {/* Search books */}
       <DebounceInput
-          className="border p-2 mb-4 outline-none w-9/10 sm:w-1/2"
+          className="border p-2 mb-4 outline-none w-9/10 sm:w-1/2 rounded-[10px]"
           placeholder="Search books..."
           minLength={2}
           debounceTimeout={300}
@@ -78,13 +78,16 @@ function Home() {
               >
                 {book.img && (
                   <img
-                    className="w-[250px] h-[320px] mt-2"
+                    className="w-[250px] sm:w-[230px] h-[320px] mt-2"
                     src={`${AxiosInstance.defaults.baseURL}/${book.img}`}
                     alt="Book Cover"
                   />
                 )}
                 <p className="text-[1em] font-semibold">{`${book.name}`}</p>
+                <div className="flex justify-between">
                 <p className="text-[0.8em] font-semibold">{`${book.author}`}</p>
+                <p className="text-[0.8em] font-semibold bg-indigo-400 px-2 rounded-full">{`${book.year}`}</p>
+                </div>
               </div>
             </li>
           ))}

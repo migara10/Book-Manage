@@ -57,7 +57,7 @@ const Register = () => {
     <div className="sm:flex-row sm:flex sm:items-center sm:justify-center sm:h-screen">
       <Toaster position="top-center" reverseOrder={false} />
       <div className="title flex  justify-center items-center  w-full sm:w-2/5">
-        <h2 className="text-[1.8em] my-6 text-center w-full sm:text-[2em] md:text-[3em]">
+      <h2 className="text-[2em] my-6 text-center w-full sm:text-[2.8em] md:text-[4em]  text-indigo-800">
           Book Store
         </h2>
       </div>
@@ -69,7 +69,7 @@ const Register = () => {
             onSubmit={formik.handleSubmit}
           >
             <div className="flex flex-col justify-start gap-3">
-              <h3 className="text-center text-lg font-bold">Register</h3>
+              <h3 className="text-center text-lg font-bol">Register</h3>
 
               {/* user name */}
               <div className="flex flex-col items-start sm:flex-row sm:justify-between sm:items-center ">
@@ -138,7 +138,7 @@ const Register = () => {
               </div>
               <div className="flex justify-between items-center">
                 <button
-                  className=" p-2 w-2/6 bg-indigo-800 rounded-[5px] hover:bg-indigo-500 transition-colors duration-300"
+                  className=" p-2 w-3/10 bg-indigo-800 rounded-[5px] hover:bg-indigo-500 transition-colors duration-300 text-white"
                   type="submit"
                 >
                   Register
