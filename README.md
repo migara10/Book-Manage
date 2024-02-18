@@ -39,12 +39,12 @@ open terminal and type,
  5. Then Frontend is open in http://localhost:5173/
 
  ## Testing credentials
-  1. admin
-     userNAme = migara10
+  1. admin ,
+     userName = migara10 ,
      password = J@va1234
 
-  2. user
-     userNAme = migara101
+  2. user ,
+     userName = migara101 ,
      password = J@va1234
 
  
